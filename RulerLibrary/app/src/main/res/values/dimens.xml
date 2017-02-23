@@ -1,0 +1,5 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="rulerview_dp1">1dp</dimen>
+    <dimen name="rulerview_sp1">1sp</dimen>
+</resources>

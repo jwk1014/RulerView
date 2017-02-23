@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="RulerAttrs">
+        <attr name="value" format="reference|integer" />
+        <attr name="valueCount" format="reference|integer" />
+        <attr name="minValue" format="reference|integer" />
+        <attr name="maxValue" format="reference|integer" />
+        <attr name="lineMargin" format="reference|dimension" />
+        <attr name="bgColor" format="reference|color" />
+        <attr name="smallLineColor" format="reference|color" />
+        <attr name="bigLineColor" format="reference|color" />
+        <attr name="smallLineWidth" format="reference|dimension" />
+        <attr name="bigLineWidth" format="reference|dimension" />
+        <attr name="bigLinePosition" format="reference|integer"/>
+        <attr name="smallLineHeight" format="reference|dimension" />
+        <attr name="smallLineHeightPercent" format="reference|float" />
+        <attr name="bigLineHeight" format="reference|dimension" />
+        <attr name="bigLineHeightPercent" format="reference|float" />
+        <attr name="textSize" format="reference|dimension"/>
+        <attr name="textMargin" format="reference|dimension"/>
+        <attr name="textColor" format="reference|color" />
+        <attr name="zeroBigLine" format="reference|boolean" />
+    </declare-styleable>
+</resources>
