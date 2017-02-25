@@ -7,18 +7,36 @@
         <attr name="maxValue" format="reference|integer" />
         <attr name="lineMargin" format="reference|dimension" />
         <attr name="bgColor" format="reference|color" />
+
         <attr name="smallLineColor" format="reference|color" />
+        <attr name="mediumLineColor" format="reference|color" />
         <attr name="bigLineColor" format="reference|color" />
+
+        <attr name="smallLineEnable" format="reference|boolean" />
+        <attr name="mediumLineEnable" format="reference|boolean" />
+        <attr name="bigLineEnable" format="reference|boolean" />
+
         <attr name="smallLineWidth" format="reference|dimension" />
+        <attr name="mediumLineWidth" format="reference|dimension" />
         <attr name="bigLineWidth" format="reference|dimension" />
+
+        <attr name="mediumLinePosition" format="reference|integer"/>
         <attr name="bigLinePosition" format="reference|integer"/>
+
         <attr name="smallLineHeight" format="reference|dimension" />
         <attr name="smallLineHeightPercent" format="reference|float" />
+
+        <attr name="mediumLineHeight" format="reference|dimension" />
+        <attr name="mediumLineHeightPercent" format="reference|float" />
+
         <attr name="bigLineHeight" format="reference|dimension" />
         <attr name="bigLineHeightPercent" format="reference|float" />
+
         <attr name="textSize" format="reference|dimension"/>
         <attr name="textMargin" format="reference|dimension"/>
         <attr name="textColor" format="reference|color" />
+
+        <attr name="zeroMediumLine" format="reference|boolean" />
         <attr name="zeroBigLine" format="reference|boolean" />
     </declare-styleable>
 </resources>

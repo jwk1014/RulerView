@@ -32,11 +32,18 @@ import java.util.TimerTask;
  */
 
 public class RulerView extends RelativeLayout {
-    private boolean zeroBigLine;
-    private int dp1, sp1, value, valueCount, minValue, maxValue, lineMargin, smallLineWidth, bigLineWidth,
-            bigLinePosition, smallLineHeight, bigLineHeight, textSize, textMargin, width, height,
-            bgColor, smallLineColor, bigLineColor, textColor;
-    private float smallLineHeightPercent, bigLineHeightPercent;
+    private final static int SMALL = 1;
+    private final static int MEDIUM = 2;
+    private final static int BIG = 3;
+    private final static int UNKNOWN = 4;
+    private boolean zeroMediumLine, zeroBigLine, smallLineEnble, mediumLineEnble, bigLineEnble;
+    private int dp1, sp1, value, valueCount, minValue, maxValue, lineMargin,
+            smallLineWidth, mediumLineWidth, bigLineWidth,
+            mediumLinePosition, bigLinePosition,
+            smallLineHeight, mediumLineHeight, bigLineHeight,
+            textSize, textMargin, width, height,
+            bgColor, smallLineColor, mediumLineColor, bigLineColor, textColor;
+    private float smallLineHeightPercent, mediumLineHeightPercent, bigLineHeightPercent;
     private RulerSurfaceView rulerSurfaceView;
     private CustomHorizontalScrollView horizontalScrollView;
     private ImageView indicatorImageView;
@@ -79,18 +86,27 @@ public class RulerView extends RelativeLayout {
             lineMargin = ta.getDimensionPixelSize(R.styleable.RulerAttrs_lineMargin, lineMargin);
             bgColor = ta.getColor(R.styleable.RulerAttrs_bgColor, bgColor);
             smallLineColor = ta.getColor(R.styleable.RulerAttrs_smallLineColor, smallLineColor);
-            bigLineColor = ta.getColor(R.styleable.RulerAttrs_bigLineColor, smallLineColor);
+            mediumLineColor = ta.getColor(R.styleable.RulerAttrs_mediumLineColor, smallLineColor);
+            bigLineColor = ta.getColor(R.styleable.RulerAttrs_bigLineColor, mediumLineColor);
+            smallLineEnble = ta.getBoolean(R.styleable.RulerAttrs_smallLineEnable, smallLineEnble);
+            mediumLineEnble = ta.getBoolean(R.styleable.RulerAttrs_mediumLineEnable, mediumLineEnble);
+            bigLineEnble = ta.getBoolean(R.styleable.RulerAttrs_bigLineEnable, bigLineEnble);
             smallLineWidth = ta.getDimensionPixelSize(R.styleable.RulerAttrs_smallLineWidth, smallLineWidth);
-            bigLineWidth = ta.getDimensionPixelSize(R.styleable.RulerAttrs_bigLineWidth, (bigLineWidth > smallLineWidth) ? bigLineWidth : smallLineWidth);
+            mediumLineWidth = ta.getDimensionPixelSize(R.styleable.RulerAttrs_mediumLineWidth, smallLineWidth);
+            bigLineWidth = ta.getDimensionPixelSize(R.styleable.RulerAttrs_bigLineWidth, smallLineWidth);
             bigLinePosition = ta.getInteger(R.styleable.RulerAttrs_bigLinePosition, bigLinePosition);
+            mediumLinePosition = ta.getInteger(R.styleable.RulerAttrs_mediumLinePosition, bigLinePosition / 2);
             smallLineHeight = ta.getDimensionPixelSize(R.styleable.RulerAttrs_smallLineHeight, smallLineHeight);
             smallLineHeightPercent = ta.getFloat(R.styleable.RulerAttrs_smallLineHeightPercent, smallLineHeightPercent);
+            mediumLineHeight = ta.getDimensionPixelSize(R.styleable.RulerAttrs_mediumLineHeight, mediumLineHeight);
+            mediumLineHeightPercent = ta.getFloat(R.styleable.RulerAttrs_mediumLineHeightPercent, mediumLineHeightPercent);
             bigLineHeight = ta.getDimensionPixelSize(R.styleable.RulerAttrs_bigLineHeight, bigLineHeight);
             bigLineHeightPercent = ta.getFloat(R.styleable.RulerAttrs_bigLineHeightPercent, bigLineHeightPercent);
             textSize = ta.getDimensionPixelSize(R.styleable.RulerAttrs_textSize, textSize);
             textMargin = ta.getDimensionPixelSize(R.styleable.RulerAttrs_textMargin, textMargin);
             textColor = ta.getColor(R.styleable.RulerAttrs_textColor, bigLineColor);
-            zeroBigLine = ta.getBoolean(R.styleable.RulerAttrs_zeroBigLine, zeroBigLine);
+            zeroMediumLine = ta.getBoolean(R.styleable.RulerAttrs_zeroBigLine, zeroMediumLine);
+            zeroBigLine = ta.getBoolean(R.styleable.RulerAttrs_zeroBigLine, bigLineEnble);
         } finally {
             ta.recycle();
         }
@@ -119,23 +135,32 @@ public class RulerView extends RelativeLayout {
         sp1 = getContext().getResources().getDimensionPixelSize(R.dimen.rulerview_sp1);
         bgColor = Color.BLACK;
         smallLineColor = Color.WHITE;
-        bigLineColor = Color.WHITE;
-        value = 0;
+        //mediumLineColor = Color.WHITE;
+        //bigLineColor = Color.WHITE;
+        //value = 0;
         valueCount = 1;
-        minValue = 0;
+        //minValue = 0;
         maxValue = 100;
         lineMargin = dp1 * 10;
+        smallLineEnble = true;
+        //mediumLineEnble = false;
+        bigLineEnble = true;
         smallLineWidth = dp1 * 2;
-        bigLineWidth = dp1 * 2;
+        //mediumLineWidth = dp1 * 2;
+        //bigLineWidth = dp1 * 2;
+        //mediumLinePosition = 5;
         bigLinePosition = 10;
-        smallLineHeight = 0;
+        //smallLineHeight = 0;
         smallLineHeightPercent = (0.33f);
-        bigLineHeight = 0;
+        //mediumLineHeight = 0;
+        mediumLineHeightPercent = (0.49f);
+        //bigLineHeight = 0;
         bigLineHeightPercent = (0.66f);
         textSize = sp1 * 15;
         textMargin = dp1 * 15;
-        textColor = Color.WHITE;
-        zeroBigLine = true;
+        //textColor = Color.WHITE;
+        //zeroMediumLine = false;
+        //zeroBigLine = true;
     }
 
     public ImageView getIndicatorImageView(){
@@ -172,6 +197,28 @@ public class RulerView extends RelativeLayout {
         horizontalScrollView.scrollTo( ((value - minValue)/valueCount) * lineMargin, 0 );
     }
 
+    int getLineType(int index){
+        if(index != 0) {
+            if(index % bigLinePosition == 0 && bigLineEnble)
+                return BIG;
+            else if(index % mediumLinePosition == 0 && mediumLineEnble)
+                return MEDIUM;
+            else if(smallLineEnble)
+                return SMALL;
+            else
+                return UNKNOWN;
+        }else {
+            if(zeroBigLine)
+                return BIG;
+            else if(zeroMediumLine)
+                return MEDIUM;
+            else if(smallLineEnble)
+                return SMALL;
+            else
+                return UNKNOWN;
+        }
+    }
+
     boolean isBigLine(int index){
         if(index != 0)
             return index % bigLinePosition == 0;
@@ -202,8 +249,8 @@ public class RulerView extends RelativeLayout {
                 public void handleMessage(Message msg) {
                     int remain = scrollX % lineMargin;
                     if(remain != 0){
-                        int moveX = ((remain > lineMargin/2) ? lineMargin-remain : -remain);
-                        smoothScrollBy(moveX, 0);
+                        int moveX = (scrollX / lineMargin + ((remain > lineMargin/2) ? 1 : 0)) * lineMargin;
+                        smoothScrollTo(moveX, 0);
                     }
                 }
             };
@@ -337,17 +384,27 @@ public class RulerView extends RelativeLayout {
                                 float lineY;
                                 int lineColor;
                                 int lineWidth;
-                                if (isBigLine(i)) {
-                                    lineColor = bigLineColor;
-                                    lineWidth = bigLineWidth;
-                                    lineY = (bigLineHeight > 0) ? bigLineHeight : height * bigLineHeightPercent;
-                                    c.drawText( "" + i,
+                                switch (getLineType(i)){
+                                    case SMALL:
+                                        lineColor = smallLineColor;
+                                        lineWidth = smallLineWidth;
+                                        lineY = (smallLineHeight > 0) ? smallLineHeight : height * smallLineHeightPercent;
+                                        break;
+                                    case MEDIUM:
+                                        lineColor = mediumLineColor;
+                                        lineWidth = mediumLineWidth;
+                                        lineY = (mediumLineHeight > 0) ? mediumLineHeight : height * mediumLineHeightPercent;
+                                        break;
+                                    case BIG:
+                                        lineColor = bigLineColor;
+                                        lineWidth = bigLineWidth;
+                                        lineY = (bigLineHeight > 0) ? bigLineHeight : height * bigLineHeightPercent;
+                                        c.drawText( "" + i,
                                                 lineX,  lineY + textMargin,
                                                 mTextPaint);
-                                } else{
-                                    lineColor = smallLineColor;
-                                    lineWidth = smallLineWidth;
-                                    lineY = (smallLineHeight > 0) ? smallLineHeight : height * smallLineHeightPercent;
+                                        break;
+                                    default:
+                                        continue;
                                 }
                                 mPaint.setColor(lineColor);
 

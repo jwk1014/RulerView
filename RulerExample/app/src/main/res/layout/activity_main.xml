@@ -16,10 +16,8 @@
         android:id="@+id/a_main_rulerView"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        app:minValue="10"
-        app:maxValue="290"
-        app:valueCount="3"
-        app:zeroBigLine="true"/>
+        app:valueCount="1"
+        app:mediumLineEnable="true"/>
 
     <Button
         android:id="@+id/a_main_button"
